@@ -24,6 +24,7 @@ provider:
   region: ca-central-1
   environment:
     SLACK_WEBHOOK_URL: ${file(../config.${self:provider.stage}.json):notifier.slack_webhook_url}
+
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
