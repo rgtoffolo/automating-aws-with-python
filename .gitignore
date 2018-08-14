@@ -1,6 +1,6 @@
 # rbgt personalized items
 *.pem
-*.example
+session-history*.py
 .DS_Store
 
 
