@@ -34,12 +34,13 @@ Notifon is a project to notify Slack users of changes to your AWS account using 
 
 Notifon currently has the following features:
 
-- Notify your Slack account when a Auto-scaling event ocucrs on your Application Load Balance
+- Notify your Slack account when a Auto-scaling event occurs on your Application Load Balance
+
 
 
 ## 03 - Videolyzer
 
-Videolyzer is a project uses an S3 upload events (MP4 files) to trigger a Lambda function that analyses the video using AWS-Rekognition
+Videolyzer is a project that uses an S3 upload events (MP4 files) to trigger a Lambda function that analyses the video using AWS-Rekognition
 
 ### features
 
