@@ -2,7 +2,7 @@
 *.pem
 session-history*.py
 .DS_Store
-
+config.dev.json
 
 
 # Byte-compiled / optimized / DLL files
