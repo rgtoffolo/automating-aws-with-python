@@ -21,7 +21,7 @@ provider:
   name: aws
   runtime: python3.6
   profile: ${file(../config.${self:provider.stage}.json):notifier.profile}
-  region: us-east-1
+  region: ca-central-1
   environment:
     SLACK_WEBHOOK_URL: ${file(../config.${self:provider.stage}.json):notifier.slack_webhook_url}
 # you can overwrite defaults here
@@ -69,7 +69,8 @@ functions:
               - "EC2 Instance Launch Successful"
             detail:
               AutoScalingGroupName:
-                - "Notifon Example Group"
+                - "PythonLab-ASG"
+#                - "Notifon Example Group"
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
