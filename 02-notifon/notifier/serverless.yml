@@ -59,8 +59,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  post-to-slack:
-    handler: handler.post_to_slack
+  autoscaling_post_to_slack:
+    handler: handler.autoscaling_post_to_slack
     events:
       - cloudwatchEvent:
           event:
@@ -72,6 +72,17 @@ functions:
               AutoScalingGroupName:
                 - "PythonLab-ASG"
 #                - "Notifon Example Group"
+
+  ec2state_post_to_slack:
+    handler: handler.ec2state_post_to_slack
+    events:
+      - cloudwatchEvent:
+          event:
+            source:
+              - "aws.ec2"
+            detail-type:
+              - "EC2 Instance State-change Notification"
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

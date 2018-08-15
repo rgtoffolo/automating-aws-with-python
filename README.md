@@ -34,8 +34,10 @@ Notifon is a project to notify Slack users of changes to your AWS account using 
 
 Notifon currently has the following features:
 
-- Notify your Slack account when a Auto-scaling event occurs on your Application Load Balance
+- Notify your Slack account when:
 
+  - an Auto-scaling event occurs on your Application Load Balance
+  - an EC2-instance change its state
 
 
 ## 03 - Videolyzer
