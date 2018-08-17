@@ -48,4 +48,4 @@ Videolyzer is a project that uses an S3 upload events (MP4 files) to trigger a L
 
 Videolyzer currently has the following features:
 
-- ...
+- Using an S3 event Videolyser calls AWS-Rekognition and return a list of tags with there are in the video. After processing the video, the completion is notified via SNS topic.
