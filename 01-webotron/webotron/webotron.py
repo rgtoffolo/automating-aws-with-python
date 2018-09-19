@@ -46,7 +46,8 @@ str_sep = "-" * 80
               help='Use a given AWS region. Default=us-east-1')
 def cli(profile, region):
     """Webotron deploys websites do AWS."""
-    global SESSION, BUCKET_MANAGER, DOMAIN_MANAGER, CERT_MANAGER, DIST_MANAGER, EC2_MANAGER, ECS_MANAGER
+    global SESSION, BUCKET_MANAGER, DOMAIN_MANAGER, CERT_MANAGER, \
+        DIST_MANAGER, EC2_MANAGER, ECS_MANAGER
     session_cfg = {}
     if profile:
         session_cfg['profile_name'] = profile
@@ -159,6 +160,7 @@ def list_instances():
     """List the EC2 instances for the current session."""
     print(str_sep)
     print("Listing EC2 instances form {} region.".format(SESSION.region_name))
+    print("{:20s}{:15s}{:10s}{}".format("ID", "TYPE", "STATE", "NAME"))
     print(str_sep)
 
     for instance in EC2_MANAGER.list_instances():
@@ -166,7 +168,7 @@ def list_instances():
         name = next((item for item in instance.tags if item["Key"] == "Name"),
                     {'Key': 'Name', 'Value': 'None'})
 
-        print("ID: {:20s} TYPE: {:15s} STATE: {:10s} NAME: {}".format(instance.id,
+        print("{:20s}{:15s}{:10s}{}".format(instance.id,
                                 instance.instance_type,
                                 instance.state['Name'],
                                 name['Value']))
@@ -229,20 +231,14 @@ def list_ecr_repository_details(repository_name):
 
     print(str_sep)
     print("Listing details from repository [{}] in {}".format(repository_name, SESSION.region_name.upper()))
-    print("{:20}{:20}{:30}".format('REP NAME', 'IMAGE TAGS','PUSHED AT'))
+    print("{:20}{:20}{:30}".format('REP NAME', 'IMAGE TAGS', 'PUSHED AT'))
     print(str_sep)
 
     for detail in rep_details['imageDetails']:
         for tag in detail['imageTags']:
-            #print(detail['repositoryName'], detail['imageTags'], detail['imagePushedAt'])
             print("{:20}{:20}{:%Y-%m-%d %H:%M:%S}".format(detail['repositoryName'],
-                                      tag,
-                                      detail['imagePushedAt']))
-
-#img['imageDetails'][0]['imagePushedAt'].strftime('%Y-%m-%d %H:%M')
-
-
-
+                                                          tag,
+                                                          detail['imagePushedAt']))
 
 
 if __name__ == '__main__':
