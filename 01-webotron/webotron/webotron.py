@@ -25,6 +25,7 @@ from webotron.domain import DomainManager
 from webotron.certificate import CertificateManager
 from webotron.cdn import DistributionManager
 from webotron.ec2 import EC2Manager
+from webotron.ecs import ECSManager
 from webotron import util
 
 SESSION = None
@@ -33,7 +34,9 @@ DOMAIN_MANAGER = None
 CERT_MANAGER = None
 DIST_MANAGER = None
 EC2_MANAGER = None
+ECS_MANAGER = None
 
+str_sep = "-" * 80
 
 @click.group()
 @click.option('--profile', default=None,
@@ -42,7 +45,7 @@ EC2_MANAGER = None
               help='Use a given AWS region. Default=us-east-1')
 def cli(profile, region):
     """Webotron deploys websites do AWS."""
-    global SESSION, BUCKET_MANAGER, DOMAIN_MANAGER, CERT_MANAGER, DIST_MANAGER, EC2_MANAGER
+    global SESSION, BUCKET_MANAGER, DOMAIN_MANAGER, CERT_MANAGER, DIST_MANAGER, EC2_MANAGER, ECS_MANAGER
     session_cfg = {}
     if profile:
         session_cfg['profile_name'] = profile
@@ -58,6 +61,7 @@ def cli(profile, region):
     CERT_MANAGER = CertificateManager(SESSION)
     DIST_MANAGER = DistributionManager(SESSION)
     EC2_MANAGER = EC2Manager(SESSION)
+    ECS_MANAGER = ECSManager(SESSION)
 
 
 @cli.command('list-buckets')
@@ -153,17 +157,38 @@ def setup_cdn(domain, bucket):
 def list_instances():
     """List the EC2 instances for the current session."""
 
+
+
+    print("-" * str_len)
     print("Listing EC2 instances form {} region.".format(SESSION.region_name))
+    print("-" * str_len)
 
     for instance in EC2_MANAGER.list_instances():
         # get the instance name in the tags list
         name = next((item for item in instance.tags if item["Key"] == "Name"),
                     {'Key': 'Name', 'Value': 'None'})
-        print("ID: {:20s} TYPE: {:15s} STATE: {:10s} NAME: ".format(instance.id,
+
+        print("ID: {:20s} TYPE: {:15s} STATE: {:10s} NAME: {}".format(instance.id,
                                 instance.instance_type,
                                 instance.state['Name'],
                                 name['Value']))
 
+    print("-" * str_len)
+
+
+@cli.command('list-ecs-clusters')
+def list_ecs_clusters():
+    """List ECS clusters for a given profile and region"""
+
+    clusters = ECS_MANAGER.list_ecs_clusters()
+
+    if clusters:
+        print(str_sep)
+        print("Listing clusters ARNs available in {}".format(SESSION.region_name.upper()))
+        print(str_sep)
+        for arn in clusters['clusterArns']:
+            print(arn)
+        print(str_sep)
 
 if __name__ == '__main__':
     # print the arguments received
