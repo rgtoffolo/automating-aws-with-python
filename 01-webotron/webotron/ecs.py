@@ -26,3 +26,8 @@ class ECSManager:
         """List all existing ECR repositories."""
         response = self.ecr.describe_repositories()
         return response
+
+    def list_ecr_repository_details(self, repository_name):
+        """List repository details from a given repository name."""
+        response = self.ecr.describe_images(repositoryName=repository_name)
+        return response

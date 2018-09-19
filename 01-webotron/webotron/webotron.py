@@ -221,6 +221,30 @@ def list_ecr_repositories():
             print("{:30}{:60}".format(rep['repositoryName'], rep['repositoryUri']))
 
 
+@cli.command('list-ecr-repository-details')
+@click.argument('repository_name')
+def list_ecr_repository_details(repository_name):
+    """List ECR repository details from a given repository name."""
+    rep_details = ECS_MANAGER.list_ecr_repository_details(repository_name)
+
+    print(str_sep)
+    print("Listing details from repository [{}] in {}".format(repository_name, SESSION.region_name.upper()))
+    print("{:20}{:20}{:30}".format('REP NAME', 'IMAGE TAGS','PUSHED AT'))
+    print(str_sep)
+
+    for detail in rep_details['imageDetails']:
+        for tag in detail['imageTags']:
+            #print(detail['repositoryName'], detail['imageTags'], detail['imagePushedAt'])
+            print("{:20}{:20}{:%Y-%m-%d %H:%M:%S}".format(detail['repositoryName'],
+                                      tag,
+                                      detail['imagePushedAt']))
+
+#img['imageDetails'][0]['imagePushedAt'].strftime('%Y-%m-%d %H:%M')
+
+
+
+
+
 if __name__ == '__main__':
     # print the arguments received
     # print(sys.argv)

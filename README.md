@@ -3,7 +3,7 @@ Repository for Automating AWS with Python
 
 ## 01-webotron
 
-Webotron is a script that will sync a local directory to an s3 bucket, and optionally configure Route 53 and cloudfront as well.
+Webotron is a script that have a list of features that can be used to interact with your AWS resources.
 
 ### Options
 
@@ -14,9 +14,6 @@ Webotron is a script that will sync a local directory to an s3 bucket, and optio
 ### Features
 
 Webotron currently has the following features:
-
-- Set AWS profile with --profile=profileName
-- Set AWS region witn  --region=regionName
 
 S3
 - List bucket
@@ -36,6 +33,8 @@ ECS/ECR
 - List ECS clusters ARNs
 - List ECS task definitions/versions
 - List ECR repositories
+- List ECR repository details (from a given repository name)
+
 
 
 ## 02-notifon
