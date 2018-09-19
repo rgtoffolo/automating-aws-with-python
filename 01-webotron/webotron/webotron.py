@@ -38,6 +38,7 @@ ECS_MANAGER = None
 
 str_sep = "-" * 80
 
+
 @click.group()
 @click.option('--profile', default=None,
               help='Use a given AWS profile.')
@@ -156,9 +157,6 @@ def setup_cdn(domain, bucket):
 @cli.command('list-instances')
 def list_instances():
     """List the EC2 instances for the current session."""
-
-
-
     print(str_sep)
     print("Listing EC2 instances form {} region.".format(SESSION.region_name))
     print(str_sep)
@@ -178,8 +176,7 @@ def list_instances():
 
 @cli.command('list-ecs-clusters')
 def list_ecs_clusters():
-    """List ECS clusters for a given profile and region"""
-
+    """List ECS clusters for a given profile and region."""
     clusters = ECS_MANAGER.list_ecs_clusters()
 
     print(str_sep)
@@ -196,7 +193,6 @@ def list_ecs_clusters():
 @cli.command('list-ecs-task-definitions')
 def list_ecs_task_definitions():
     """List ECS task definitions."""
-
     tasks = ECS_MANAGER.list_ecs_task_definitions()
     if tasks:
         print(str_sep)
@@ -206,8 +202,23 @@ def list_ecs_task_definitions():
 
         for task in tasks['taskDefinitionArns']:
             if len(task) > 0:
-                task_name, version = task.rsplit("/",1)[1].split(":")
+                task_name, version = task.rsplit("/", 1)[1].split(":")
                 print("{:50}{:20}".format(task_name, version))
+
+
+@cli.command('list-ecr-repositories')
+def list_ecr_repositories():
+    """List ECR repositories and URIs."""
+    repositories = ECS_MANAGER.list_ecr_repositories()
+
+    if repositories:
+        print(str_sep)
+        print("Listing repositories available in {}".format(SESSION.region_name.upper()))
+        print("{:30}{:60}".format('NAME', 'URI'))
+        print(str_sep)
+
+        for rep in repositories['repositories']:
+            print("{:30}{:60}".format(rep['repositoryName'], rep['repositoryUri']))
 
 
 if __name__ == '__main__':

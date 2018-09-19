@@ -15,17 +15,27 @@ Webotron is a script that will sync a local directory to an s3 bucket, and optio
 
 Webotron currently has the following features:
 
+- Set AWS profile with --profile=profileName
+- Set AWS region witn  --region=regionName
+
+S3
 - List bucket
 - List contents of a bucket
-- List CloudFront distributions for a given domain-name
-- List EC2 instances (id, type, status, tag[Name])
-- List ECS clusters ARNs
-- List ECS task definitions/versions
 - Create and set up bucket
 - Sync directory tree to bucket
-- Set AWS profile with --profile=profileName
-- Configure route 53 domain
+
+CloudFront / Route53
+- List CloudFront distributions for a given domain-name
 - Setup a CloudFront CDN and SSL
+- Configure route 53 domain
+
+EC2
+- List EC2 instances (id, type, status, tag[Name])
+
+ECS/ECR
+- List ECS clusters ARNs
+- List ECS task definitions/versions
+- List ECR repositories
 
 
 ## 02-notifon

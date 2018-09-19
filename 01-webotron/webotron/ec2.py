@@ -11,7 +11,6 @@ class EC2Manager:
         self.session = session
         self.ec2 = self.session.resource('ec2')
 
-
     def list_instances(self):
         """List all existing instances in the default zone."""
         response = self.ec2.instances.all()
