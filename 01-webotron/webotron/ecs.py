@@ -16,3 +16,9 @@ class ECSManager:
         """List all existing clusters in a default zone."""
         response = self.ecs.list_clusters()
         return response
+
+
+    def list_ecs_task_definitions(self):
+        """List all existing ECS task definitions."""
+        response = self.ecs.list_task_definitions()
+        return response

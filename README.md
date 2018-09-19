@@ -20,6 +20,7 @@ Webotron currently has the following features:
 - List CloudFront distributions for a given domain-name
 - List EC2 instances (id, type, status, tag[Name])
 - List ECS clusters ARNs
+- List ECS task definitions/versions
 - Create and set up bucket
 - Sync directory tree to bucket
 - Set AWS profile with --profile=profileName

@@ -159,9 +159,9 @@ def list_instances():
 
 
 
-    print("-" * str_len)
+    print(str_sep)
     print("Listing EC2 instances form {} region.".format(SESSION.region_name))
-    print("-" * str_len)
+    print(str_sep)
 
     for instance in EC2_MANAGER.list_instances():
         # get the instance name in the tags list
@@ -173,7 +173,7 @@ def list_instances():
                                 instance.state['Name'],
                                 name['Value']))
 
-    print("-" * str_len)
+    print(str_sep)
 
 
 @cli.command('list-ecs-clusters')
@@ -182,13 +182,33 @@ def list_ecs_clusters():
 
     clusters = ECS_MANAGER.list_ecs_clusters()
 
+    print(str_sep)
+
     if clusters:
-        print(str_sep)
         print("Listing clusters ARNs available in {}".format(SESSION.region_name.upper()))
         print(str_sep)
         for arn in clusters['clusterArns']:
             print(arn)
+
+    print(str_sep)
+
+
+@cli.command('list-ecs-task-definitions')
+def list_ecs_task_definitions():
+    """List ECS task definitions."""
+
+    tasks = ECS_MANAGER.list_ecs_task_definitions()
+    if tasks:
         print(str_sep)
+        print("Listing task definitions available in {}".format(SESSION.region_name.upper()))
+        print("{:50}{:20}".format('Task', 'Version'))
+        print(str_sep)
+
+        for task in tasks['taskDefinitionArns']:
+            if len(task) > 0:
+                task_name, version = task.rsplit("/",1)[1].split(":")
+                print("{:50}{:20}".format(task_name, version))
+
 
 if __name__ == '__main__':
     # print the arguments received
