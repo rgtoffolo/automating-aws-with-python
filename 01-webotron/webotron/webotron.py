@@ -40,11 +40,13 @@ str_sep = "-" * 80
 
 
 @click.group()
-@click.option('--profile', default=None,
+@click.option('--profile', '-p', default=None,
               help='Use a given AWS profile.')
-@click.option('--region', default='us-east-1',
+@click.option('--region', '-r', default='us-east-1',
               help='Use a given AWS region. Default=us-east-1')
-def cli(profile, region):
+@click.option('--clear', '-c', flag_value=True,
+              help='Clear terminal screen before showing script results')
+def cli(profile, region, clear):
     """Webotron deploys websites do AWS."""
     global SESSION, BUCKET_MANAGER, DOMAIN_MANAGER, CERT_MANAGER, \
         DIST_MANAGER, EC2_MANAGER, ECS_MANAGER
@@ -55,6 +57,8 @@ def cli(profile, region):
     if region:
         session_cfg['region_name'] = region
 
+    if clear:
+        util.clear_scr()
 
 # using **<variable> python expands it as a parameter=content
     SESSION = boto3.Session(**session_cfg)
@@ -90,10 +94,10 @@ def setup_bucket(bucket):
     BUCKET_MANAGER.configure_website(s3_bucket)
 
 
-@cli.command('sync')
+@cli.command('sync-to-s3')
 @click.argument('pathname', type=click.Path(exists=True))
 @click.argument('bucket')
-def sync(pathname, bucket):
+def sync_to_s3(pathname, bucket):
     """Sync contents of PATHNAME to BUCKET."""
     BUCKET_MANAGER.sync(pathname, bucket)
     print(BUCKET_MANAGER.get_bucket_url(BUCKET_MANAGER.s3.Bucket(bucket)))
@@ -159,7 +163,7 @@ def setup_cdn(domain, bucket):
 def list_instances():
     """List the EC2 instances for the current session."""
     print(str_sep)
-    print("Listing EC2 instances form {} region.".format(SESSION.region_name))
+    print("Listing EC2 instances from [{}] region.".format(SESSION.region_name))
     print("{:20s}{:15s}{:10s}{}".format("ID", "TYPE", "STATE", "NAME"))
     print(str_sep)
 
@@ -169,9 +173,35 @@ def list_instances():
                     {'Key': 'Name', 'Value': 'None'})
 
         print("{:20s}{:15s}{:10s}{}".format(instance.id,
-                                instance.instance_type,
-                                instance.state['Name'],
-                                name['Value']))
+                                            instance.instance_type,
+                                            instance.state['Name'],
+                                            name['Value']))
+
+    print(str_sep)
+
+
+@cli.command('list-instances-by-tag')
+@click.argument('tag_key')
+@click.argument('tag_value')
+def list_instances_by_tag(tag_key, tag_value):
+    """List instances by tag Name and Value."""
+    instances = EC2_MANAGER.list_instances_by_tag(tag_key, tag_value)
+
+    print(str_sep)
+    print("Listing EC2 instances from [{}] region with tag [{}:{}]."
+          .format(SESSION.region_name, tag_key, tag_value))
+    print("{:20s}{:15s}{:10s}{}".format("ID", "TYPE", "STATE", "NAME"))
+    print(str_sep)
+
+    for reservations in instances['Reservations']:
+        for instance in reservations['Instances']:
+            name = next((item for item in instance['Tags'] if item["Key"] == "Name"),
+                        {'Key': 'Name', 'Value': 'None'})
+
+            print("{:20s}{:15s}{:10s}{}".format(instance['InstanceId'],
+                                                instance['InstanceType'],
+                                                instance['State']['Name'],
+                                                name['Value']))
 
     print(str_sep)
 
@@ -184,7 +214,8 @@ def list_ecs_clusters():
     print(str_sep)
 
     if clusters:
-        print("Listing clusters ARNs available in {}".format(SESSION.region_name.upper()))
+        print("Listing clusters ARNs available in {}"
+              .format(SESSION.region_name.upper()))
         print(str_sep)
         for arn in clusters['clusterArns']:
             print(arn)

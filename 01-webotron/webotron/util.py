@@ -3,6 +3,7 @@
 """Utilities for webotron."""
 
 from collections import namedtuple
+from os import system
 
 Endpoint = namedtuple('Endpoint', ['name', 'host', 'zone'])
 
@@ -35,3 +36,8 @@ def known_region(region):
 def get_endpoint(region):
     """Get the s3 website hosting endpoint for this region."""
     return region_to_endpoint[region]
+
+
+def clear_scr():
+    """Clear the terminal string if --clear option provided."""
+    system('clear')

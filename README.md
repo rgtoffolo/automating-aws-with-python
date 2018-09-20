@@ -3,12 +3,14 @@ Repository for Automating AWS with Python
 
 ## 01-webotron
 
-Webotron is a script that have a list of features that can be used to interact with your AWS resources.
+Webotron is a script that has a list of features that can be used to interact with your AWS resources.
+
 
 ### Options
 
-- --profile [profile_name]    - forces webotron to use a given "aws config profile"
-- --region  [region_name]     - forces webotron to use a given "aws region" (Default=us-east-1)
+- -p, --profile [profile_name]    - forces webotron to use a given "aws config profile"
+- -r, --region  [region_name]     - forces webotron to use a given "aws region" (Default=us-east-1)
+- -c, --clear                     - clear terminal screen before returning the script results
 
 
 ### Features
@@ -28,6 +30,7 @@ CloudFront / Route53
 
 EC2
 - List EC2 instances (id, type, status, tag[Name])
+- List EC2 instances filtering by tag (key/value)
 
 ECS/ECR
 - List ECS clusters ARNs

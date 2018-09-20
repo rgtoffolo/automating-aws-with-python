@@ -15,3 +15,17 @@ class EC2Manager:
         """List all existing instances in the default zone."""
         response = self.ec2.instances.all()
         return response
+
+    def list_instances_by_tag(self, tag_key, tag_value):
+        """List intances by tag Name:Value."""
+        response = self.session.client('ec2').describe_instances(
+            Filters=[
+                {
+                    'Name': 'tag:' + tag_key,
+                    'Values': [
+                        tag_value
+                    ]
+                }
+            ]
+        )
+        return response
