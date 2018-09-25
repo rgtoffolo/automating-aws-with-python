@@ -7,9 +7,10 @@ class EC2Manager:
     """Manage EC2 Instances."""
 
     def __init__(self, session):
-        """Create a BucketManager object."""
+        """Create a EC2Manager object."""
         self.session = session
         self.ec2 = self.session.resource('ec2')
+
 
     def list_instances(self):
         """List all existing instances in the default zone."""
@@ -25,6 +26,15 @@ class EC2Manager:
                     'Values': [
                         tag_value
                     ]
+                },
+                {
+                    'Name': 'instance-state-name',
+                    'Values': ['pending',
+                               'running',
+                               'shutting-down',
+                               'stopping',
+                               'stopped']  # not showing terminated instances
+
                 }
             ]
         )

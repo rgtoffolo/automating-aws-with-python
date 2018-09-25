@@ -27,6 +27,9 @@ from webotron.cdn import DistributionManager
 from webotron.ec2 import EC2Manager
 from webotron.ecs import ECSManager
 from webotron import util
+from botocore.exceptions import ClientError
+from webotron.err import ErrManager
+
 
 SESSION = None
 BUCKET_MANAGER = None
@@ -37,7 +40,6 @@ EC2_MANAGER = None
 ECS_MANAGER = None
 
 str_sep = "-" * 80
-
 
 @click.group()
 @click.option('--profile', '-p', default=None,
@@ -167,15 +169,18 @@ def list_instances():
     print("{:20s}{:15s}{:10s}{}".format("ID", "TYPE", "STATE", "NAME"))
     print(str_sep)
 
-    for instance in EC2_MANAGER.list_instances():
-        # get the instance name in the tags list
-        name = next((item for item in instance.tags if item["Key"] == "Name"),
-                    {'Key': 'Name', 'Value': 'None'})
+    try:
+        for instance in EC2_MANAGER.list_instances():
+            # get the instance name in the tags list
+            name = next((item for item in instance.tags if item["Key"] == "Name"),
+                        {'Key': 'Name', 'Value': 'None'})
 
-        print("{:20s}{:15s}{:10s}{}".format(instance.id,
-                                            instance.instance_type,
-                                            instance.state['Name'],
-                                            name['Value']))
+            print("{:20s}{:15s}{:10s}{}".format(instance.id,
+                                                instance.instance_type,
+                                                instance.state['Name'],
+                                                name['Value']))
+    except ClientError as e:
+        ErrManager.err_manager(e)
 
     print(str_sep)
 
